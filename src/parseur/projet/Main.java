@@ -3,7 +3,7 @@ package parseur.projet;
 public class Main {
     public static void main(String[] args) {
 
-        String str="le telephone sonne à 6 heures";
+        String str="le peit telephone sonne à 6 heures";
         TokenManager tm=new TokenManager(str);
         Parseur p=new Parseur(tm);
         try {
