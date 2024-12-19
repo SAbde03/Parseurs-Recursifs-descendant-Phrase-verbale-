@@ -36,9 +36,10 @@ public class Parseur {
 
     public void sujet() {
         article();
+        adjectif();
         nom();
     }
-    // complement --> COD | CTT
+    // complement --> COD | CCT
 
     public void complement() {
         if (tc.equals("le") || tc.equals("la") || tc.equals("les") ||
@@ -57,7 +58,7 @@ public class Parseur {
     }
     //CTT --> adverbe temps
 
-    public void CCT() {     //COMPLEMENT CIRCONSTANCIEL DE TEMPS
+    public void CCT() {     //COMPLEMENT CIRCONSTANCIEL DU TEMPS
         adverbe();
         nombre();
         if(tc.equals("heures")) {
@@ -139,7 +140,20 @@ public class Parseur {
                 throw new RuntimeException("Erreur: attendu un nombre mais trouvé '" + tc + "'");
         }
     }
+    public void adjectif() {
+        switch (tc) {
+            case "grand":
+            case "petit":
+            case "joli":
+            case "beau":
+            case "rapide":
+                consommer(tc);
+                break;
+            default:
 
+                break;
+        }
+    }
 
     public void parse() {
         phrase();
