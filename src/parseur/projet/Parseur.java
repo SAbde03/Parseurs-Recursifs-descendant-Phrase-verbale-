@@ -32,14 +32,43 @@ public class Parseur {
     }
 
 
-    // sujet --> article nom
+    // sujet --> pronom | article adjectif nom
 
     public void sujet() {
-        article();
-        adjectif();
-        nom();
+        if(isPronom(tc)){
+            pronom();
+        }else if(isArticle(tc)){
+            article();
+            if (isAdjectif(tc)){
+                adjectif();
+            }
+            nom();
+        }else{
+            throw new RuntimeException("Erreur: attendu un article ou un pronom mais trouvé '" + tc + "'");
+        }
     }
-    // complement --> COD | CCT
+
+    // pronom --> je | tu | il | elle | on | nous | vous | ils | elles
+
+    public void pronom(){
+        switch (tc){
+            case "je":
+            case "tu":
+            case "il":
+            case "elle":
+            case "on":
+            case "nous":
+            case "vous":
+            case "ils":
+            case "elles":
+                consommer(tc);
+                break;
+            default:
+                throw new RuntimeException("Erreur: attendu un pronom mais trouvé '" + tc + "'");
+        }
+    }
+
+    // complement --> COD | CCT | CCL | COI | CCC | CCB
 
     public void complement() {
         if (tc.equals("le") || tc.equals("la") || tc.equals("les") ||
@@ -47,8 +76,16 @@ public class Parseur {
             COD();
         } else if (tc.equals("à") || tc.equals("chaque") || tc.equals("toujours")) {
             CCT();
-        } else {
-            throw new RuntimeException("Erreur: attendu un COD ou un CCT mais trouvé '" + tc + "'");
+        } else if(tc.equals("dans") || tc.equals("sur") || tc.equals("sous")){
+            CCL();
+        } else if (tc.equals("à") || tc.equals("pour")) {
+            COI();
+        }else if (tc.equals("à cause de") || tc.equals("grâce à")){
+            CCC();
+        }else if(tc.equals("afin de")){
+            CCB();
+        }else {
+            throw new RuntimeException("Erreur: attendu un COD ou un CCT ou CCL ou COi ou CCC ou CCB mais trouvé '" + tc + "'");
         }
     }
     // COD--> article nom
@@ -66,6 +103,54 @@ public class Parseur {
         }
     }
 
+    // CCL --> préposition article nom
+    public void CCL(){ // COMPLEMENT CIRCONSTANCIEL DE LIEU
+        preposition();
+        article();
+        nom();
+    }
+
+    // COI --> préposition article nom
+    public void COI() { // COMPLIMENT D'OBJET INDERICT
+        preposition();
+        article();
+        nom();
+    }
+
+    // CCC --> préposition article nom | préposition verbe
+    public void CCC(){ // COMPLEMENT CIRCONSTANCIEL DE CAUSE
+        preposition();
+        if(isArticle(tc)){
+            article();
+            nom();
+        }else{
+            verbe();
+        }
+    }
+
+    // CCB --> préposition verbe
+    public void CCB(){ // COMPLEMENT CIRCONSTANCIEL DE BUT
+        preposition();
+        verbe();
+    }
+
+    // Préposition --> dans | sur | sous | à | pour | à cause de | grâce à
+    public void preposition(){
+        switch (tc){
+            case "dans":
+            case "sur":
+            case "sous":
+            case "à":
+            case "pour":
+            case "à cause de":
+            case "grâce à":
+            case "afin de":
+                consommer(tc);
+                break;
+            default:
+                throw new RuntimeException("Erreur: attendu une préposition mais trouvé '" + tc + "'");
+        }
+    }
     // article --> la | le | les | un | une | des
 
     public void article() {
@@ -91,6 +176,11 @@ public class Parseur {
             case "mangent":
             case "charge":
             case "sonne":
+            case "est":
+            case "réussir":
+            case "dormir":
+            case "jouer":
+            case "étudie":
                 consommer(tc);
                 break;
             default:
@@ -98,7 +188,7 @@ public class Parseur {
         }
     }
 
-    // nom --> souris | fromage | telephone
+    // nom --> souris | fromage | telephone | maison | table | jardin | café | classe
 
     public void nom() {
         switch (tc) {
@@ -106,6 +196,11 @@ public class Parseur {
             case "fromage":
             case "fille":
             case "telephone":
+            case "maison":
+            case "table":
+            case "jardin":
+            case "café":
+            case "classe":
                 consommer(tc);
                 break;
             default:
@@ -153,6 +248,26 @@ public class Parseur {
 
                 break;
         }
+    }
+
+    private boolean isPronom(String token) {
+        return token.equals("je") || token.equals("tu") ||
+                token.equals("il") || token.equals("elle") ||
+                token.equals("on") || token.equals("nous") ||
+                token.equals("vous") || token.equals("ils") ||
+                token.equals("elles");
+    }
+
+    private boolean isArticle(String token) {
+        return token.equals("le") || token.equals("la") ||
+                token.equals("les") || token.equals("un") ||
+                token.equals("une") || token.equals("des");
+    }
+
+    private boolean isAdjectif(String token) {
+        return token.equals("grand") || token.equals("joli") ||
+                token.equals("petit") || token.equals("beau") ||
+                token.equals("rapide");
     }
 
     public void parse() {
