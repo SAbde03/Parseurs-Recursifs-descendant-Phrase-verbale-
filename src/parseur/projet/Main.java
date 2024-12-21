@@ -17,8 +17,7 @@ public class Main {
             choix = sc.nextInt();
             sc.nextLine();
             switch (choix){
-                case 0:
-                    break;
+                case 0: break;
                 case 1:
                     System.out.print("Entrer une phrase: ");
                     phrase = sc.nextLine();
@@ -35,6 +34,8 @@ public class Main {
         }while(choix != 0);
     }
 }
+
+
 
 
 

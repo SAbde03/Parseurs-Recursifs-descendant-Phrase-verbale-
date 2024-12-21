@@ -24,7 +24,6 @@ public class Parseur {
     }
 
     // phrase --> sujet verbe complément
-
     public void phrase() {
         sujet();
         verbe();
@@ -33,7 +32,6 @@ public class Parseur {
 
 
     // sujet --> pronom | article adjectif nom
-
     public void sujet() {
         if(isPronom(tc)){
             pronom();
@@ -49,7 +47,6 @@ public class Parseur {
     }
 
     // pronom --> je | tu | il | elle | on | nous | vous | ils | elles
-
     public void pronom(){
         switch (tc){
             case "je":
@@ -68,15 +65,16 @@ public class Parseur {
         }
     }
 
-    // complement --> COD | CCT | CCL | COI | CCC | CCB
-
+    // complement --> COD | COD CCL | CCT | CCL | COI | CCC | CCB
     public void complement() {
-        if (tc.equals("le") || tc.equals("la") || tc.equals("les") ||
-                tc.equals("un") || tc.equals("une") || tc.equals("des")) {
+        if (isArticle(tc)) {
             COD();
+            if(isLieu(tc)){
+                CCL();
+            }
         } else if (tc.equals("à") || tc.equals("chaque") || tc.equals("toujours")) {
             CCT();
-        } else if(tc.equals("dans") || tc.equals("sur") || tc.equals("sous")){
+        } else if(isLieu(tc)){
             CCL();
         } else if (tc.equals("à") || tc.equals("pour")) {
             COI();
@@ -88,13 +86,14 @@ public class Parseur {
             throw new RuntimeException("Erreur: attendu un COD ou un CCT ou CCL ou COi ou CCC ou CCB mais trouvé '" + tc + "'");
         }
     }
+
     // COD--> article nom
     public void COD() {
         article();
         nom();
     }
-    //CTT --> adverbe temps
 
+    //CTT --> adverbe temps
     public void CCT() {     //COMPLEMENT CIRCONSTANCIEL DU TEMPS
         adverbe();
         nombre();
@@ -151,8 +150,8 @@ public class Parseur {
                 throw new RuntimeException("Erreur: attendu une préposition mais trouvé '" + tc + "'");
         }
     }
-    // article --> la | le | les | un | une | des
 
+    // article --> la | le | les | un | une | des
     public void article() {
         switch (tc) {
             case "la":
@@ -166,10 +165,9 @@ public class Parseur {
             default:
                 throw new RuntimeException("Erreur: attendu un article mais trouvé '" + tc + "'");
         }
-
-        // verbe --> mange | mangent | charge
-
     }
+
+    // verbe --> mange | mangent | charge | sonne | est | réussir | dormir | jouer | étudie
     public void verbe() {
         switch (tc) {
             case "mange":
@@ -189,7 +187,6 @@ public class Parseur {
     }
 
     // nom --> souris | fromage | telephone | maison | table | jardin | café | classe
-
     public void nom() {
         switch (tc) {
             case "souris":
@@ -208,6 +205,7 @@ public class Parseur {
         }
     }
 
+    // adverbe --> à | chaque
     public void adverbe() {
         switch (tc) {
             case "à":
@@ -218,6 +216,8 @@ public class Parseur {
                 throw new RuntimeException("Erreur: attendu un adverbe mais trouvé '" + tc + "'");
         }
     }
+
+    // nombre --> 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
     public void nombre() {
         switch (tc) {
             case "1":
@@ -235,6 +235,8 @@ public class Parseur {
                 throw new RuntimeException("Erreur: attendu un nombre mais trouvé '" + tc + "'");
         }
     }
+
+    // adjectif --> grand | petit | joli | beau | rapide
     public void adjectif() {
         switch (tc) {
             case "grand":
@@ -250,6 +252,7 @@ public class Parseur {
         }
     }
 
+    // vérifier si le token est un pronom
     private boolean isPronom(String token) {
         return token.equals("je") || token.equals("tu") ||
                 token.equals("il") || token.equals("elle") ||
@@ -258,17 +261,25 @@ public class Parseur {
                 token.equals("elles");
     }
 
+    // vérifier si le token est un article
     private boolean isArticle(String token) {
         return token.equals("le") || token.equals("la") ||
                 token.equals("les") || token.equals("un") ||
                 token.equals("une") || token.equals("des");
     }
 
+    // vérifier si le token est un adjectif
     private boolean isAdjectif(String token) {
         return token.equals("grand") || token.equals("joli") ||
                 token.equals("petit") || token.equals("beau") ||
                 token.equals("rapide");
     }
+
+    // vérifier si le token est un complement de lieu
+    private boolean isLieu(String token){
+        return tc.equals("dans") || tc.equals("sur") || tc.equals("sous");
+    }
+
 
     public void parse() {
         phrase();
