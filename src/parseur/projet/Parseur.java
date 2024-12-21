@@ -275,7 +275,7 @@ public class Parseur {
                 token.equals("rapide");
     }
 
-    // vérifier si le token est un complement de lieu
+    // vérifier si le token est un preposition
     private boolean isLieu(String token){
         return tc.equals("dans") || tc.equals("sur") || tc.equals("sous");
     }
