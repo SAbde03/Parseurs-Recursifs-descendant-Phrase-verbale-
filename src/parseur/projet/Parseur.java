@@ -73,7 +73,7 @@ public class Parseur {
     public void complement() {
         if (tc.equals("le") || tc.equals("la") || tc.equals("les") ||
                 tc.equals("un") || tc.equals("une") || tc.equals("des")) {
-            COD();
+            COD(); CCL();
         } else if (tc.equals("à") || tc.equals("chaque") || tc.equals("toujours")) {
             CCT();
         } else if(tc.equals("dans") || tc.equals("sur") || tc.equals("sous")){
@@ -85,7 +85,7 @@ public class Parseur {
         }else if(tc.equals("afin de")){
             CCB();
         }else {
-            throw new RuntimeException("Erreur: attendu un COD ou un CCT ou CCL ou COi ou CCC ou CCB mais trouvé '" + tc + "'");
+            throw new RuntimeException("Erreur: attendu un COD ou un CCT ou CCL ou COI ou CCC ou CCB mais trouvé '" + tc + "'");
         }
     }
     // COD--> article nom
@@ -148,7 +148,7 @@ public class Parseur {
                 consommer(tc);
                 break;
             default:
-                throw new RuntimeException("Erreur: attendu une préposition mais trouvé '" + tc + "'");
+               // throw new RuntimeException("Erreur: attendu une préposition mais trouvé '" + tc + "'");
         }
     }
     // article --> la | le | les | un | une | des
@@ -164,7 +164,7 @@ public class Parseur {
                 consommer(tc);
                 break;
             default:
-                throw new RuntimeException("Erreur: attendu un article mais trouvé '" + tc + "'");
+               // throw new RuntimeException("Erreur: attendu un article mais trouvé '" + tc + "'");
         }
 
         // verbe --> mange | mangent | charge
@@ -177,9 +177,11 @@ public class Parseur {
             case "charge":
             case "sonne":
             case "est":
+            case "réussis":
             case "réussir":
+            case "dors":
             case "dormir":
-            case "jouer":
+            case "joue":
             case "étudie":
                 consommer(tc);
                 break;
@@ -198,13 +200,14 @@ public class Parseur {
             case "telephone":
             case "maison":
             case "table":
+            case "football":
             case "jardin":
             case "café":
             case "classe":
                 consommer(tc);
                 break;
             default:
-                throw new RuntimeException("Erreur: attendu un nom mais trouvé '" + tc + "'");
+               // throw new RuntimeException("Erreur: attendu un nom mais trouvé '" + tc + "'");
         }
     }
 
